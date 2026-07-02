@@ -24,8 +24,11 @@
   <div id="authScreen" class="hidden">
     <img src="assets/logo.png" alt="Money">
     <form id="authForm">
-      <input id="authEmail" type="email" placeholder="אימייל" autocomplete="username" required>
-      <input id="authPassword" type="password" placeholder="סיסמה" autocomplete="current-password" required>
+      <input id="authEmail" type="email" placeholder="אימייל" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" required>
+      <div style="position:relative;">
+        <input id="authPassword" type="password" placeholder="סיסמה" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" required style="width:100%;">
+        <button type="button" id="togglePw" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:none; border:none; font-size:12px; color:#857C6E; text-decoration:underline;">הצג</button>
+      </div>
       <div class="authErr" id="authErr"></div>
       <button type="submit" class="primary" id="authSubmit">כניסה</button>
     </form>

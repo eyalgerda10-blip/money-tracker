@@ -634,6 +634,12 @@
   function wireStaticHandlers() {
     q('authForm').addEventListener('submit', handleAuthSubmit);
     q('logoutBtn').onclick = handleLogout;
+    q('togglePw').onclick = function () {
+      var pw = q('authPassword');
+      var showing = pw.type === 'text';
+      pw.type = showing ? 'password' : 'text';
+      q('togglePw').textContent = showing ? 'הצג' : 'הסתר';
+    };
 
     q('dashPrevMonth').onclick = function () { stepMonth(-1); };
     q('dashNextMonth').onclick = function () { stepMonth(1); };
