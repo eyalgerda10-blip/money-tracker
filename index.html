@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Money — פנקס הקופה שלך</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="assets/icon-192.png">
+<meta name="theme-color" content="#1F1D1B">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-card" id="appCard">
+
+  <!-- ===== SPLASH ===== -->
+  <div id="splash">
+    <img src="assets/logo.png" alt="Money">
+    <div class="tag">— פנקס הקופה שלך —</div>
+  </div>
+
+  <!-- ===== AUTH SCREEN ===== -->
+  <div id="authScreen" class="hidden">
+    <img src="assets/logo.png" alt="Money">
+    <form id="authForm">
+      <input id="authEmail" type="email" placeholder="אימייל" autocomplete="username" required>
+      <input id="authPassword" type="password" placeholder="סיסמה" autocomplete="current-password" required>
+      <div class="authErr" id="authErr"></div>
+      <button type="submit" class="primary" id="authSubmit">כניסה</button>
+    </form>
+    <div class="switchLine" id="authSwitchLine">אין לך חשבון? <span id="authSwitch">להרשמה</span></div>
+  </div>
+
+  <!-- ===== APP ===== -->
+  <div id="app" class="hidden" style="display:flex; flex-direction:column; height:100%;">
+
+    <!-- HEADER -->
+    <div id="header">
+      <div class="wordmark">
+        <div class="brand">
+          <b>Money</b>
+          <span class="mark-inc">+</span>
+          <span class="mark-exp">−</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="screenTitle" id="screenTitle">בית</div>
+          <button id="logoutBtn" style="background:none; border:none; font-size:11px; color:#857C6E; text-decoration:underline;">יציאה</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCROLL BODY -->
+    <div id="scrollBody">
+
+      <!-- DASHBOARD -->
+      <div class="screen" id="screen-dashboard">
+        <div class="logoHero"><img src="assets/logo.png" alt="Money"></div>
+
+        <div class="monthPicker">
+          <button id="dashPrevMonth">›</button>
+          <div class="monthLabel" id="dashMonthLabel"></div>
+          <button id="dashNextMonth">‹</button>
+        </div>
+
+        <div class="summarySeam">
+          <div>
+            <div class="lbl">הוצאות החודש</div>
+            <div class="big mono" style="color:var(--exp)" id="dashTotalExpense"></div>
+            <div class="cur mono" style="color:var(--exp)" id="dashCur1"></div>
+          </div>
+          <div class="divider"></div>
+          <div>
+            <div class="lbl">הכנסות החודש</div>
+            <div class="big mono" style="color:var(--inc)" id="dashTotalIncome"></div>
+            <div class="cur mono" style="color:var(--inc)" id="dashCur2"></div>
+          </div>
+        </div>
+
+        <div class="netBox" style="border-top:2px dashed #C9BFAC; border-bottom:2px dashed #C9BFAC; padding:14px 0; margin-bottom:20px;">
+          <div class="lbl" style="margin-bottom:6px;">מאזן נטו</div>
+          <div class="big mono" id="dashNet"></div>
+        </div>
+
+        <div class="budgetCard" id="budgetCard"></div>
+
+        <div id="breakdownWrap"></div>
+
+        <div class="chartCard" id="chartCard">
+          <div class="chartHead">
+            <div class="title">הוצאות מול הכנסות</div>
+            <div class="chartLegend">
+              <span><i style="background:var(--exp)"></i>הוצאות</span>
+              <span><i style="background:var(--inc)"></i>הכנסות</span>
+            </div>
+          </div>
+          <div id="chartRows"></div>
+        </div>
+
+        <div class="navCards">
+          <button id="goExpensesBtn"><div class="sym" style="color:var(--exp)">−</div><div class="lbl">הוצאות</div></button>
+          <button id="goIncomeBtn"><div class="sym" style="color:var(--inc)">+</div><div class="lbl">הכנסות</div></button>
+          <button id="goDebtsBtn"><div class="sym" style="color:#8A6D3B">=</div><div class="lbl">חובות</div></button>
+        </div>
+      </div>
+
+      <!-- EXPENSES -->
+      <div class="screen hidden" id="screen-expenses">
+        <div class="monthPicker">
+          <button id="expPrevMonth">›</button>
+          <div class="monthLabel" id="expMonthLabel"></div>
+          <button id="expNextMonth">‹</button>
+        </div>
+        <div class="summarySeam" style="padding:16px 4px;">
+          <div style="flex:none; width:100%; display:flex; justify-content:space-between; align-items:baseline;">
+            <div style="font-size:13px; color:#857C6E; letter-spacing:.5px;">סה״כ הוצאות החודש</div>
+            <div class="mono" style="font-weight:600; font-size:28px; color:var(--exp);" id="expTotal"></div>
+          </div>
+        </div>
+        <div class="chips" id="expChips"></div>
+        <div id="expList"></div>
+      </div>
+
+      <!-- INCOME -->
+      <div class="screen hidden" id="screen-income">
+        <div class="monthPicker">
+          <button id="incPrevMonth">›</button>
+          <div class="monthLabel" id="incMonthLabel"></div>
+          <button id="incNextMonth">‹</button>
+        </div>
+        <div class="summarySeam" style="padding:16px 4px;">
+          <div style="flex:none; width:100%; display:flex; justify-content:space-between; align-items:baseline;">
+            <div style="font-size:13px; color:#857C6E; letter-spacing:.5px;">סה״כ הכנסות החודש</div>
+            <div class="mono" style="font-weight:600; font-size:28px; color:var(--inc);" id="incTotal"></div>
+          </div>
+        </div>
+        <div id="incList"></div>
+      </div>
+
+      <!-- DEBTS -->
+      <div class="screen hidden" id="screen-debts">
+        <div class="debtNetCard">
+          <div class="split">
+            <div class="col"><div class="lbl">חייבים לי</div><div class="amt mono" style="color:var(--inc)" id="debtOwedToMe"></div></div>
+            <div class="vdiv"></div>
+            <div class="col"><div class="lbl">אני חייב</div><div class="amt mono" style="color:var(--exp)" id="debtIOwe"></div></div>
+          </div>
+          <div class="netRow"><span class="lbl">מאזן נטו</span><span class="val mono" id="debtNet"></span></div>
+        </div>
+        <div class="debtTabs" id="debtTabs">
+          <button data-tab="owedToMe" class="owed">חייבים לי</button>
+          <button data-tab="iOwe" class="iowe">אני חייב</button>
+        </div>
+        <button class="addDebtBtn" id="addDebtBtn">+ הוסף חוב</button>
+        <div id="debtList"></div>
+        <div id="debtArchive"></div>
+      </div>
+
+    </div>
+
+    <!-- FAB MENU -->
+    <div id="fabOverlay" class="hidden"></div>
+    <div id="fabMenu" class="hidden">
+      <button class="incBtn" id="fabAddIncome">+ הכנסה</button>
+      <button class="expBtn" id="fabAddExpense">− הוצאה</button>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div id="bottomNav">
+      <button data-screen="dashboard" class="active"><span class="tabLbl">בית</span></button>
+      <button data-screen="expenses"><span class="tabLbl">הוצאות</span></button>
+      <button data-screen="income"><span class="tabLbl">הכנסות</span></button>
+      <button data-screen="debts"><span class="tabLbl">חובות</span></button>
+    </div>
+
+    <button id="fabBtn">+</button>
+
+    <!-- MODAL: add/edit transaction or debt -->
+    <div class="sheetOverlay hidden" id="modalOverlay">
+      <div class="sheet" id="modalSheet">
+        <div class="sheetHead">
+          <div class="title" id="modalTitle"></div>
+          <button id="modalClose">×</button>
+        </div>
+        <form id="txForm">
+          <div class="field hidden" id="fieldDesc">
+            <label>תיאור</label>
+            <input id="formDesc" placeholder="למשל: קניות בסופר">
+          </div>
+          <div class="field hidden" id="fieldName">
+            <label>שם</label>
+            <input id="formName" placeholder="למשל: דנה כהן">
+          </div>
+          <div class="fieldRow">
+            <div class="field">
+              <label>סכום</label>
+              <input id="formAmount" inputmode="decimal" placeholder="0" class="mono">
+            </div>
+            <div class="field">
+              <label>תאריך</label>
+              <input id="formDate" type="date" class="mono">
+            </div>
+          </div>
+          <div class="catPicker hidden" id="fieldCatPicker">
+            <label>קטגוריה — בחר או צור משלך</label>
+            <div class="catList" id="modalCatList"></div>
+            <div class="newCatRow">
+              <input id="formNewCat" placeholder="שם קטגוריה חדשה…">
+              <button type="button" class="addBtn" id="addCatBtn">הוסף</button>
+            </div>
+          </div>
+          <div class="field hidden" id="fieldDir">
+            <label>כיוון</label>
+            <div class="dirRow" id="dirRow">
+              <button type="button" class="owed" data-dir="owedToMe">חייבים לי</button>
+              <button type="button" class="iowe" data-dir="iOwe">אני חייב</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>הערה (אופציונלי)</label>
+            <input id="formNote" placeholder="הערה">
+          </div>
+          <button type="submit" class="saveBtn" id="saveBtn">שמור</button>
+          <button type="button" class="removeBtn hidden" id="removeBtn">מחק רשומה</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- CATEGORY MANAGER -->
+    <div class="sheetOverlay hidden" id="catMgrOverlay">
+      <div class="sheet" id="catMgrSheet">
+        <div class="sheetHead">
+          <div class="title">ניהול קטגוריות</div>
+          <button id="catMgrClose">×</button>
+        </div>
+        <div class="catMgrHead">צור קטגוריות הוצאה משלך. מחיקת קטגוריה תעביר את הרשומות שלה ל״שונות״.</div>
+        <div class="newCatRow" style="margin-bottom:18px;">
+          <input id="mgrNewCat" placeholder="שם קטגוריה חדשה…">
+          <button type="button" class="addBtn" id="mgrAddBtn">הוסף</button>
+        </div>
+        <div id="mgrList"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
